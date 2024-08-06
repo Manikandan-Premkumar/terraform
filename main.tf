@@ -64,4 +64,15 @@ resource "aws_s3_bucket_website_configuration" "website" {
   }
 
   depends_on = [ aws_s3_bucket_acl.example ]
+
+resource "aws_route53_record" "exampleDomain-a" {
+  zone_id = aws_route53_zone.exampleDomain.zone_id
+  name    = var.domainName
+  type    = "A"
+  alias {
+    name                   = aws_s3_bucket.my_bucket.website_endpoint
+    zone_id                = aws_s3_bucket.my_bucket.hosted_zone_id
+    evaluate_target_health = true
+  }
+}
 }
