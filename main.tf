@@ -1,6 +1,6 @@
-resource "aws_s3_bucket" "my_bucket" {
-  bucket = "var.bucketname"
-
+#create s3 bucket
+resource "aws_s3_bucket" "mybucket" {
+  bucket = var.bucketname
 }
 
 resource "aws_s3_bucket_ownership_controls" "example" {
@@ -46,13 +46,6 @@ resource "aws_s3_object" "error" {
   content_type = "text/html"
 }
 
-resource "aws_s3_object" "profile" {
-  bucket = aws_s3_bucket.mybucket.id
-  key = "profile.png"
-  source = "profile.png"
-  acl = "public-read"
-}
-
 resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.mybucket.id
   index_document {
@@ -64,15 +57,6 @@ resource "aws_s3_bucket_website_configuration" "website" {
   }
 
   depends_on = [ aws_s3_bucket_acl.example ]
+}
 
-resource "aws_route53_record" "exampleDomain-a" {
-  zone_id = aws_route53_zone.exampleDomain.zone_id
-  name    = var.domainName
-  type    = "A"
-  alias {
-    name                   = aws_s3_bucket.my_bucket.website_endpoint
-    zone_id                = aws_s3_bucket.my_bucket.hosted_zone_id
-    evaluate_target_health = true
-  }
-}
-}
+
